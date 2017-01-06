@@ -10,7 +10,7 @@
 universe                = vanilla
 
 ## List your executable here.
-executable              = vanilla_docker_exc.sh
+executable              = vanilla_docker_ex.sh
 
 ## Arguments for the executable
 ## In this case it is not needed.
