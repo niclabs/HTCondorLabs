@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>icon_condor_gui.ico</file>
+    <file>icon_condor_gui.png</file>
+  </qresource>
+</RCC>
+

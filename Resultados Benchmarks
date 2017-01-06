@@ -1,0 +1,21 @@
+----- Benchmarks
+
+--Docker (cacharro)
+100 	nodos = (promedio 20 pruebas) 16(.5) segundos
+200		nodos = (promedio 20 pruebas) 2 minutos 28(.4) segundos
+500		nodos = (promedio 10 pruebas) 52 minutos 9(.8) segundos
+
+--Directo (cacharro)
+100 	nodos = (promedio 20 pruebas) 34(.4) segundos
+200		nodos = (promedio 20 pruebas) 2 minutos 22(.5) segundos
+500 	nodos = (promedio 10 pruebas) 50 minutos 48(.6) segundos
+
+--Docker (condortest)
+100 	nodos = (promedio 20 pruebas) 9(.3) segundos
+200		nodos = (promedio 20 pruebas) 1 minuto 25 segundos
+500		nodos = (promedio 10 pruebas) 30 minutos 26(.3) segundos
+
+--Directo (condortest)
+100 	nodos = (promedio 20 pruebas) 10 segundos
+200		nodos = (promedio 20 pruebas) 1 minuto 29(.9) segundos
+500		nodos = (promedio 10 pruebas) 31 minutos 58(.2) segundos

@@ -1,0 +1,61 @@
+#####################
+##
+## HTCondor job file
+## 
+##      *RUNNING DOCKER AS A DOCKER JOB*
+##
+#####################
+
+## Docker universe for docker jobs.
+universe                = docker
+
+## Tell condor which image you are using for the
+## job to run on.
+docker_image            = ubuntu
+
+## List your executable here. 
+## In this case dont list the executable, but the
+## order to execute it.
+executable              = ./T1
+
+## Arguments for the executable.
+## In this case T1 needs 2 arguments, the file name
+## and a word to be written in the file.
+## You must have the Output folder already.
+arguments               = Output/filename_$(Process) testing_$(Process)
+
+## Tell condor which files to transfer.
+## You have to transfer the Output folder to save the files.
+transfer_input_files    = T1, Output
+
+## Tell condor which files to brick back.
+## You want your files back.
+transfer_output_files   = Output
+
+## When should condor transfer files?
+## YES means to always transfer them.
+should_transfer_files   = YES
+
+## When should condor transfer the ouput back?
+## ON_EXIT means to transfer them when the job
+## is finished.
+when_to_transfer_output = ON_EXIT
+
+## Create files for:
+#       *standard output
+#       *standard error
+#       *job log
+## $(Process) stands for the process variable
+## $(Cluster) stands for the job number.
+output                  = logs/out.$(Process)
+error                   = logs/err.$(Process)
+log                     = logs/log.$(Process)
+
+## Tells condor how much memory you want to save
+## for the job while running.
+request_memory          = 1024
+
+## How many times is this job going to run?
+## This can be written in more fancy ways. For
+## more information see the oficial documentation.
+queue 10

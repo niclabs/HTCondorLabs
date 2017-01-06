@@ -1,0 +1,9 @@
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test0_500nodes -m closeness value -i benchmarks/graphs/500/test0_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test1_500nodes -m closeness value -i benchmarks/graphs/500/test1_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test2_500nodes -m closeness value -i benchmarks/graphs/500/test2_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test3_500nodes -m closeness value -i benchmarks/graphs/500/test3_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test4_500nodes -m closeness value -i benchmarks/graphs/500/test4_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test5_500nodes -m closeness value -i benchmarks/graphs/500/test5_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test6_500nodes -m closeness value -i benchmarks/graphs/500/test6_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test7_500nodes -m closeness value -i benchmarks/graphs/500/test7_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten
+python -u get_ranking_correlations.py -o benchmarks/results/ -n test8_500nodes -m closeness value -i benchmarks/graphs/500/test8_graph_numberOfNodes_500.csv -d 0.9 -w 1.0 -t ten

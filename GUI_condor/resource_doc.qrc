@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>doc/Condor_GUI.chm</file>
+    <file>doc/Condor_GUI.pdf</file>
+  </qresource>
+</RCC>
+
