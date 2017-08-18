@@ -21,11 +21,11 @@ int main(int argc, char *argv[]) {
 	FILE *in;
 
 	if(argc!=3) {
-		fprintf(stderr, "Ingrese: 'nombre archivo' 'palabra'\n");
+		fprintf(stderr, "Usage: %s <out_filename> <input>\n", argv[0]);
     	exit(1);
     } else {
     	if ((in= fopen(argv[1], "w"))==NULL) {
-    	fprintf(stderr, "No se puede leer/escribir '%s'\n", argv[1]);
+    	fprintf(stderr, "Couldn't write to '%s'\n", argv[1]);
         exit(1);
     	}
     	modify(in, argv[2]);

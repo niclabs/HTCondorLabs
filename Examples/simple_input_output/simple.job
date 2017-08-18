@@ -1,0 +1,59 @@
+#####################
+##
+## HTCondor job file
+##
+##      *SIMPLE INPUT OUTPUT VANILLA JOB*
+##
+#####################
+
+## Vanilla universe for standard jobs.
+universe                = vanilla
+
+## List your executable here.
+executable              = echo_to_file
+
+## Arguments for the executable
+## Arguments for the executable.
+## In order to pass an argument with spaces,
+## the argument must be surrounded by single quotes
+## and the entire argument list must be surrounded
+## by double quotes.
+arguments               = "output.txt 'hello world'"
+
+## Tell condor which files to transfer.
+transfer_input_files    = echo_to_file
+
+## Tell condor which files to brick back.
+## this files can be folders or single files.
+## When a directory is specified all files
+## inside the directory will be transfered
+transfer_output_files   = output.txt
+
+## When should condor transfer files?
+## YES means to always transfer them.
+should_transfer_files   = YES
+
+## When should condor transfer the ouput back?
+## ON_EXIT means to transfer them when the job
+## is finished.
+when_to_transfer_output = ON_EXIT
+
+## List the requirements for the job to be run.
+## This is configured by macros available for condor.
+## In this case, the requirement for this job is to
+## run on machine with the same architecture
+## and operative system as where the executable was compiled
+Requirements = Arch == "X86_64" && OpSys == "LINUX"
+
+## Create files for:
+#       *standard output
+#       *standard error
+#       *job log
+output                  = logs/out
+error                   = logs/err
+log                     = logs/log
+
+## How many times is this job going to run?
+## This can be written in more fancy ways. For
+## more information see the oficial documentation.
+queue 1
