@@ -1,18 +1,17 @@
 # Example jobs for condor.
 
-T1.c is a C program that needs 2 arguments: 'name' and 'word'. 'name' is used to create a file in which to write 'word'.
-Its a simple program but help understand Condor's behavior, like when Condor takes back a generated file with it.
 
-There are 2 examples in this directory.
+All examples in this directory run the C program `echo_to_file.c` which is executed like this:
+```
+./echo_to_file filename "content to write"
+```
+This creates a file with name `filename` and writes `content to write` to it.
 
-1.- Docker universe job
+The examples show different ways of running this program on a cluster of machines using condor.
 
-2.- Vanilla universe running a Docker job
+There are 4 examples in this directory.
 
-1* To run the Docker universe job submit 'docker.job' to Condor. This template will tell Condor that the job will be using
-a certain docker image to run. Condor will take care of all this and run the job inside the container.
-To run this job you first have to compile T1.c like follows: gcc -o T1 T1.c
-
-2* To run the Vanilla universe with a Dockerfile submit 'vanilla_docker.job'. This template will tell condor to use the
-'vanilla_docker_exc.sh' executable that will build and run the Dockerfile, then copy the folder out of the container
-and tell Condor to take that folder back when the job is done.
+* `simple_input_output`: The simplest way to execute a program, transfers the pre-compiled executable to the target machine.
+* `simple_io_as_docker_job`: Tranfers the pre-compiled executable and runs it on a docker container. You must specify the docker image to build the container.
+* `simple_io_as_vanilla_job`: Runs a script which builds a container from a Dockerfile and executes it, the container compiles and runs the program.
+* `multiple_io_as_vanilla_job`: Same as the last one but executes multiple copies of the job on, potentially on different machines. It then collects all the results and transfers them back to the submitter machine.
