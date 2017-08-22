@@ -1,0 +1,61 @@
+#####################
+##
+## HTCondor job file
+##
+##      *RUNNING DOCKER AS A STANDARD JOB*
+##
+#####################
+
+## Vanilla universe for standard jobs.
+universe                = vanilla
+
+## List your executable here.
+executable              = vanilla_docker_ex.sh
+
+## Arguments for the executable
+## We give the process id, this uniquely identifies
+## each process within a job, for example, this job
+## will run 5 times, so $(Process) will be a number
+## between 0 and 4
+arguments = $(Process)
+
+## Tell condor which files to transfer.
+transfer_input_files    = Dockerfile, echo_to_file.c
+
+## Tell condor which files to bring back.
+## this files can be folders, like in this case
+## myvol is a folder that is copied from the
+## docker container.
+transfer_output_files   = output
+
+## List the requirements for the job to be run.
+## This is configured by macros available for condor.
+## In this case, the requirement for this job is to
+## have condor installed in the executing machine.
+Requirements            = TARGET.HasDocker
+
+## When should condor transfer files?
+## YES means to always transfer them.
+should_transfer_files   = YES
+
+## When should condor transfer the output back?
+## ON_EXIT means to transfer them when the job
+## is finished.
+when_to_transfer_output = ON_EXIT
+
+## Create files for:
+#       *standard output
+#       *standard error
+#       *job log
+## $(Process) stands for the process variable
+## $(Cluster) stands for the job number.
+## In this case every process will have it's
+## own log files.
+output                  = logs/out_$(Process)
+error                   = logs/err_$(Process)
+log                     = logs/log_$(Process)
+
+## How many times is this job going to run?
+## This can be written in more fancy ways. For
+## more information see the official documentation.
+queue 5
