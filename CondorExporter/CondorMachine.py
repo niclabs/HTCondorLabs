@@ -4,17 +4,17 @@ class Machine:
     def __init__(self, name, address):
         self.name = name
         self.address = address
-        self.slots = []
+        self.slots = {}
 
     def update_activity(self, activity_metric):
-        for slot in self.slots:
+        for slot in self.slots.itervalues():
             is_busy = slot.activity == "Busy"
             is_idle = slot.activity == "Idle"
             activity_metric.busy.add_metric([self.name, str(slot.slot_id), self.address], is_busy)
             activity_metric.idle.add_metric([self.name, str(slot.slot_id), self.address], is_idle)
 
     def update_state(self, state_metric):
-        for slot in self.slots:
+        for slot in self.slots.itervalues():
             is_owner = slot.state == "Owner"
             is_claimed = slot.state == "Claimed"
             is_unclaimed = slot.state == "Unclaimed"

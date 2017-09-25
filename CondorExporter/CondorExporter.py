@@ -4,7 +4,7 @@
 import time
 
 from prometheus_client import start_http_server
-from prometheus_client.core import GaugeMetricFamily, REGISTRY
+from prometheus_client.core import REGISTRY
 
 import htcondor
 import re
@@ -23,51 +23,76 @@ def query_all_slots(projection=[]):
     return all_submitters_query
 
 
-def parse_address(addressV1):
-    regex_match = re.compile(r'.*p="primary"; a="([\d.]*)"; port.*}').match(addressV1)
+def parse_address(address):
+#   regex_match = re.compile(r'.*p="primary"; a="([\d.]*)"; port.*}').match(address)
+    regex_match = re.compile(r'<(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}):.*').match(address)
     if regex_match is not None:
         return regex_match.group(1)
     return ""
 
 
-def get_all_machines():
-    projection = ["Machine", "State", "Name", "SlotID", "Activity", "AddressV1"]
-    slots_info = query_all_slots(projection=projection)
-    machines = {}
-    for slot in slots_info:
-        name = slot.get("Machine", None)
-        slot_id = slot.get("SlotID", None)
-        activity = slot.get("Activity", None)
-        state = slot.get("State", None)
-        address = slot.get("AddressV1", None)
-        if name not in machines:
-            machines[name] = Machine(name, parse_address(address))
-        current_slot = Slot(slot_id)
-        current_slot.activity = activity
-        current_slot.state = state
-        machines[name].slots.append(current_slot)
-    return machines.itervalues()
+def get_all_submitters():
+    pass
+
+
+def get_jobs_from_submitter(submitter):
+    pass
+
+
+def parse_job_status(status_code):
+    if status_code == 0:
+        return ""
+    elif status_code == 1:
+        return ""
+    elif status_code == 2:
+        return ""
+    return ""
 
 
 class CondorCollector(object):
 
     def __init__(self):
-        self.metrics = {}
+        self.activity_metrics = SlotActivityMetric()
+        self.state_metrics = SlotStateMetric()
+        self.metrics = [self.activity_metrics, self.state_metrics]
+        self.machines = {}
 
-    def setup_empty_prometheus_metrics(self):
-        self.metrics = {}
+    def get_machine_list(self):
+        return [machine for machine in self.machines.itervalues()]
+
+    def query_all_machines(self):
+        projection = ["Machine", "State", "Name", "SlotID", "Activity", "MyAddress"]
+        slots_info = query_all_slots(projection=projection)
+        for slot in slots_info:
+            name = slot.get("Machine", None)
+            slot_id = slot.get("SlotID", None)
+            activity = slot.get("Activity", None)
+            state = slot.get("State", None)
+            address = slot.get("MyAddress", "")
+            if name not in self.machines:
+                self.machines[name] = Machine(name, parse_address(address))
+            current_machine = self.machines[name]
+            if slot_id not in current_machine.slots:
+                current_machine.slots[slot_id] = Slot(slot_id)
+            current_slot = current_machine.slots[slot_id]
+            current_slot.activity = activity
+            current_slot.state = state
+        return self.get_machine_list()
+
+    def collect_machine_metrics(self):
+        machines = self.query_all_machines()
+        for machines in machines:
+            machines.update_activity(self.activity_metrics)
+            machines.update_state(self.state_metrics)
+
+    def collect_job_metrics(self):
+        pass
 
     def collect(self):
-        machines = get_all_machines()
-        activity_metrics = SlotActivityMetric()
-        state_metrics = SlotStateMetric()
-        metrics = [activity_metrics, state_metrics]
-        for machines in machines:
-            machines.update_activity(activity_metrics)
-            machines.update_state(state_metrics)
-
+        self.collect_machine_metrics()
+        self.collect_job_metrics()
         metrics_list = []
-        for m in metrics:
+        for m in self.metrics:
             metrics_list += m.as_list()
         for m in metrics_list:
             yield m
