@@ -6,6 +6,10 @@ class Machine:
         self.address = address
         self.slots = {}
 
+    def reset_slots_metrics(self):
+        for slot in self.slots.itervalues():
+            slot.reset_metrics()
+
     def update_activity(self, activity_metric):
         for slot in self.slots.itervalues():
             is_busy = slot.activity == "Busy"

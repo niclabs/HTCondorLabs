@@ -6,3 +6,6 @@ class Slot:
         self.activity = None
         self.state = None
 
+    def reset_metrics(self):
+        self.activity = None
+        self.state = None

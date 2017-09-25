@@ -63,6 +63,8 @@ class CondorCollector(object):
     def query_all_machines(self):
         projection = ["Machine", "State", "Name", "SlotID", "Activity", "MyAddress"]
         slots_info = query_all_slots(projection=projection)
+        for machine in self.machines.itervalues():
+            machine.reset_slots_metrics()
         for slot in slots_info:
             name = slot.get("Machine", None)
             slot_id = slot.get("SlotID", None)
