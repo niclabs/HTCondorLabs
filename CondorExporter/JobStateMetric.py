@@ -13,5 +13,9 @@ class JobStateMetric:
                                       'Number of jobs on the held state for a given cluster and submitter',
                                       labels=['submitter', 'cluster'])
 
+        self.completed = GaugeMetricFamily('condor_job_state_completed',
+                                           'Number of jobs on the completed state for a given cluster and submitter',
+                                           labels=['submitter', 'cluster'])
+
     def as_list(self):
-        return [self.idle, self.running, self.held]
+        return [self.idle, self.running, self.held, self.completed]
