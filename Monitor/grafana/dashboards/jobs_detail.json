@@ -17,6 +17,12 @@
       "version": "4.5.1"
     },
     {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
       "type": "datasource",
       "id": "prometheus",
       "name": "Prometheus",
@@ -26,12 +32,6 @@
       "type": "panel",
       "id": "singlestat",
       "name": "Singlestat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
       "version": ""
     }
   ],
@@ -44,11 +44,98 @@
   "hideControls": false,
   "id": null,
   "links": [],
-  "refresh": "1m",
   "rows": [
     {
       "collapse": false,
-      "height": 207,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "fill": 1,
+          "id": 1,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null as zero",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(condor_job_state_running)",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "amount of jobs running on pool",
+              "refId": "A",
+              "step": 30
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Jobs Running",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Dashboard Row",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": 97,
       "panels": [
         {
           "cacheTimeout": null,
@@ -68,7 +155,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 17,
+          "id": 2,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -96,7 +183,7 @@
               "to": "null"
             }
           ],
-          "span": 3,
+          "span": 2,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -106,15 +193,15 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "count(condor_slot_state_claimed{machine=~'$machine'})",
+              "expr": "condor_job_state_running{cluster=~'$cluster'}",
               "format": "time_series",
               "intervalFactor": 2,
               "refId": "A",
-              "step": 4
+              "step": 600
             }
           ],
           "thresholds": "",
-          "title": "Slots Total",
+          "title": "Jobs Running",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -144,7 +231,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 1,
+          "id": 3,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -172,7 +259,7 @@
               "to": "null"
             }
           ],
-          "span": 3,
+          "span": 2,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -182,16 +269,15 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "count(count(condor_slot_state_claimed{machine=~'$machine'}) by (machine))",
+              "expr": "condor_job_state_idle{cluster=~'$cluster'}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "",
               "refId": "A",
-              "step": 4
+              "step": 600
             }
           ],
           "thresholds": "",
-          "title": "Machines Total",
+          "title": "Jobs Queued",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -204,79 +290,80 @@
           "valueName": "current"
         },
         {
-          "columns": [
-            {
-              "text": "Avg",
-              "value": "avg"
-            }
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_PROMETHEUS}",
-          "fontSize": "100%",
-          "hideTimeOverride": false,
-          "id": 12,
-          "links": [],
-          "minSpan": 4,
-          "pageSize": null,
-          "scroll": true,
-          "showHeader": true,
-          "sort": {
-            "col": 0,
-            "desc": true
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
           },
-          "span": 6,
-          "styles": [
+          "id": 4,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
             {
-              "alias": "Time",
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "Time",
-              "type": "date"
+              "name": "value to text",
+              "value": 1
             },
             {
-              "alias": "",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "decimals": 2,
-              "pattern": "Avg",
-              "thresholds": [],
-              "type": "hidden",
-              "unit": "short"
-            },
-            {
-              "alias": "Machine Name → Address",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 2,
-              "link": false,
-              "pattern": "Metric",
-              "preserveFormat": true,
-              "sanitize": false,
-              "thresholds": [],
-              "type": "string",
-              "unit": "short"
+              "name": "range to text",
+              "value": 2
             }
           ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(condor_slot_activity_idle{machine=~'$machine'}) by (machine, address)",
+              "expr": "condor_job_state_held{cluster=~'$cluster'}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{machine}} → {{address}}",
               "refId": "A",
-              "step": 2
+              "step": 600
             }
           ],
-          "title": "Machine Addresses",
-          "transform": "timeseries_aggregations",
-          "type": "table"
+          "thresholds": "",
+          "title": "Jobs Held",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
         },
         {
           "cacheTimeout": null,
@@ -324,7 +411,7 @@
               "to": "null"
             }
           ],
-          "span": 4,
+          "span": 2,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -334,15 +421,15 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(condor_slot_state_unclaimed{machine=~'$machine'})",
+              "expr": "condor_job_state_completed{cluster=~'$cluster'}",
               "format": "time_series",
               "intervalFactor": 2,
               "refId": "A",
-              "step": 4
+              "step": 600
             }
           ],
           "thresholds": "",
-          "title": "Slots Unclaimed",
+          "title": "Jobs Completed",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -364,7 +451,7 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_PROMETHEUS}",
-          "format": "none",
+          "format": "s",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -410,91 +497,15 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(condor_slot_state_owner{machine=~'$machine'})",
+              "expr": "condor_job_avg_running_time_seconds{cluster=~'$cluster'}",
               "format": "time_series",
               "intervalFactor": 2,
               "refId": "A",
-              "step": 4
+              "step": 600
             }
           ],
           "thresholds": "",
-          "title": "Slots Owner",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "${DS_PROMETHEUS}",
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 7,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 4,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "expr": "sum(condor_slot_state_claimed{machine=~'$machine'})",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "refId": "A",
-              "step": 4
-            }
-          ],
-          "thresholds": "",
-          "title": "Slots Claimed",
+          "title": "Average Running Time",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -507,255 +518,12 @@
           "valueName": "current"
         }
       ],
-      "repeat": null,
+      "repeat": "cluster",
       "repeatIteration": null,
       "repeatRowId": null,
       "showTitle": true,
-      "title": "Machines",
-      "titleSize": "h5"
-    },
-    {
-      "collapse": false,
-      "height": 178,
-      "panels": [
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "${DS_PROMETHEUS}",
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 13,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 4,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "expr": "condor_job_state_running",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "",
-              "refId": "A",
-              "step": 4
-            }
-          ],
-          "thresholds": "",
-          "title": "Jobs Running",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "0",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "${DS_PROMETHEUS}",
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 14,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 4,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "expr": "condor_job_state_idle",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "",
-              "refId": "A",
-              "step": 4
-            }
-          ],
-          "thresholds": "",
-          "title": "Jobs Queued",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "0",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": "${DS_PROMETHEUS}",
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 15,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 4,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "expr": "condor_job_state_held",
-              "format": "time_series",
-              "intervalFactor": 2,
-              "legendFormat": "",
-              "refId": "A",
-              "step": 4
-            }
-          ],
-          "thresholds": "1,1",
-          "title": "Jobs Held",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "0",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": true,
-      "title": "Jobs",
-      "titleSize": "h5"
+      "title": "Stats for cluster $cluster",
+      "titleSize": "h6"
     }
   ],
   "schemaVersion": 14,
@@ -764,19 +532,19 @@
   "templating": {
     "list": [
       {
-        "allValue": ".+",
+        "allValue": null,
         "current": {},
         "datasource": "${DS_PROMETHEUS}",
-        "hide": 0,
+        "hide": 2,
         "includeAll": true,
         "label": null,
-        "multi": true,
-        "name": "machine",
+        "multi": false,
+        "name": "cluster",
         "options": [],
-        "query": "label_values(condor_slot_activity_busy,machine)",
+        "query": "label_values(condor_job_state_held, cluster)",
         "refresh": 1,
         "regex": "",
-        "sort": 1,
+        "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -786,7 +554,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -814,7 +582,7 @@
       "30d"
     ]
   },
-  "timezone": "browser",
-  "title": "Condor summary",
+  "timezone": "",
+  "title": "Jobs Detail",
   "version": 1
 }
