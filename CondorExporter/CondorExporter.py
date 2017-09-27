@@ -8,17 +8,16 @@ from prometheus_client.core import REGISTRY
 import htcondor
 import re
 
-from CondorMachine import Machine
-from CondorSlot import Slot
-from SlotActivityMetric import SlotActivityMetric
-from SlotStateMetric import SlotStateMetric
-from JobStateMetric import JobStateMetric
-from JobRunningTimeMetric import JobRunningTimeMetric
-from CondorJobCluster import CondorJobCluster
-from CondorJob import CondorJob
+from condor.CondorMachine import Machine
+from condor.CondorSlot import Slot
+from condor.CondorJobCluster import CondorJobCluster
+from condor.CondorJob import CondorJob
+from metrics.SlotActivityMetric import SlotActivityMetric
+from metrics.SlotStateMetric import SlotStateMetric
+from metrics.JobStateMetric import JobStateMetric
+from metrics.JobRunningTimeMetric import JobRunningTimeMetric
 
 schedd = htcondor.Schedd()
-
 
 def query_all_slots(projection=[]):
     coll = htcondor.Collector()
@@ -127,10 +126,13 @@ class CondorCollector(object):
                 self.clusters[cluster_id].jobs[job_id].state = parse_job_status(status)
             if self.clusters[cluster_id].jobs[job_id].state == "Running":
                 self.clusters[cluster_id].jobs[job_id].execute_machine = job.get("RemoteHost", 0)
+        inactive_clusters = []
         for cluster in self.clusters.itervalues():
             get_cluster_history(cluster)
             if not cluster.active:
-                del self.clusters[cluster.cluster_id]
+                inactive_clusters.append(cluster.cluster_id)
+        for cluster_id in inactive_clusters:
+            del self.clusters[cluster_id]
         return [cluster for cluster in self.clusters.itervalues()]
 
     def collect_job_metrics(self, job_state_metrics, job_time_metrics):
